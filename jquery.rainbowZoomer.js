@@ -169,6 +169,7 @@
 	var pageY2 = null;
 
 	touches = false;
+        // http://www.the-xavi.com/articles/trouble-with-touch-events-jquery
 	if(e.originalEvent.touches && e.originalEvent.touches.length > 0) {
             touches = e.originalEvent.touches;
 	} else if(e.originalEvent.changedTouches && e.originalEvent.changedTouches.length > 0){
