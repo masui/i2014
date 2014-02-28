@@ -1,0 +1,101 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- meta name="viewport" content="width=device-width user-scalable=no"-->
+<meta name="viewport" content="width=device-width,,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<!--<meta name="viewport" content="width=device-width,initial-scale=1.2,minimum-scale=1.2,maximum-scale=1.2,target-densitydpi=middle-dpi,user-scalable=no"-->
+<meta name="apple-mobile-web-app-capable" content="yes" /> 
+<title>インタラクション2014 プログラム</title>
+<style type="text/css">
+<!--
+span.tag {
+  color:blue;
+}
+-->
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<!-- script src="jquery-1.7.2.min.js" -->
+<script language="JavaScript" src="i2014.js"></script>
+<script language="JavaScript" src="jquery.rainbowZoomer.js"></script>
+<script type="text/javascript">
+
+var zoomer;
+
+function linkDiv(rainbowzoomer){
+  var e = this.divCache;
+  if(e){
+    e.css('left',this.left);
+    e.css('top',this.top + rainbowzoomer.offsety);
+  }
+  else {
+    e = $("<a>");
+    e.attr('href','http://www.interaction-ipsj.org/2014/bib.php?'+this.keyword);
+    e.text(this.str);
+    e.css('text-decoration','none');
+    e.css('position','absolute');
+    e.css('white-space','nowrap'); // 改行抑制
+    e.css('left',this.left);
+    e.css('top',this.top + rainbowzoomer.offsety);
+    this.divCache = e;
+  }
+  return e;
+}
+
+$(function(){
+  $("#query").on("keyup change",search);
+
+  function search(){
+    query = $('#query');
+    q = query.val().toLowerCase();
+    if(q == ""){
+      for(var i=0;i<entries.length;i++){
+        entries[i].matched = false;
+      }
+      zoomer.update();
+    }
+    else {
+      for(var i=0;i<entries.length;i++){
+        var entry = entries[i];
+        entry.matched = entry.str.toLowerCase().match(q);
+        if(entry.matched){
+          var indent = entry.indent;
+          while(indent > 0){
+            for(var j=i-1;j>=0;j--){
+              if(entries[j].indent < indent){
+                 entries[j].matched = true;
+                 indent--;
+                 if(indent == 0) break;
+              }
+            }
+          }
+        }
+      }
+      zoomer.update(1);
+    }
+  }
+
+  var entries = [];
+  for(var i=0;i<data.length;i++){
+     entries[i] = {};
+     entries[i].str = data[i][0];
+     entries[i].indent = data[i][1];
+     entries[i].keyword = data[i][2];
+     if(data[i][2]){
+       entries[i].div = linkDiv;
+     }
+  }
+
+  zoomer = $('#find').rainbowZoomer({entries: entries, clickzoom:true});
+  zoomer.update();
+});
+
+</script>
+
+</head>
+<body style="background-color:#eee;">
+  検索: <input type="text" id="query" autocomplete="off" onkeyup="dynamicquery()" style="font-size:10pt;left:10;top:10;width:200;">
+  <div id="find" style="background-color:#fff;position:absolute;top:50;left:10; width:540;height:600;"></div>
+</body>
+</html>
+

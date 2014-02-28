@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+puts "var data = ["
+puts "  [\"口頭発表\", 0],"
+
+demos = nil
+File.open("program.txt"){ |f|
+  f.each { |line|
+    line.chomp!
+    a = line.split(/\t/)
+    number = a[0]
+    title = a[1]
+    authors = a[2]
+    if !demos && number !~ /^\d+$/ then
+      demos = true
+      puts "  [\"インタラクティブ発表\", 0],"
+    end
+    puts "  [\"#{number}: #{title}\", 2, \"#{number}\"],"
+    puts "  [\"#{authors}\", 3, \"#{number}\"],"
+  }
+}
+puts "];"
+
