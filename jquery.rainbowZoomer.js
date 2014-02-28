@@ -565,7 +565,8 @@
 		}
 		for(var j=parents.length-1;j>=0;j--){
 		    var parent = parents[j];
-		    ctx.fillStyle = rainbowColor(parent.str); // !!! colorは初期化時に計算しておくべき
+		    //ctx.fillStyle = rainbowColor(parent.str); // !!! colorは初期化時に計算しておくべき
+		    ctx.fillStyle = rainbowColor(parent);
 		    ctx.fillRect(parent.left-5,entry.top+this.offsety,this.width-(parent.left-5),300);
 		    if(oldParentEntries[parent.indent] != parentEntries[parent.indent]){
 			ctx.strokeStyle = 'rgb(255,255,255)';
@@ -592,7 +593,8 @@
 		    oldParentEntries[j] = parentEntries[j];
 		}
 		
-		var col = rainbowColor(entry.str); // !!!
+		//var col = rainbowColor(entry.str); // !!!
+		var col = rainbowColor(entry);
 		ctx.fillStyle = col;
 		ctx.fillRect(entry.left-5,entry.top+this.offsety,800,300);
 		
@@ -690,7 +692,7 @@
 	this.granularity = v;
     };
 
-    var rainbowColor = function(s){ // 虹色ぽいものを生成
+    var __rainbowColor = function(s){ // 虹色ぽいものを生成
 	var val = 0;
 	for(var i=0;i<s.length;i++){
 	    val = (val * 1234567 + s.charCodeAt(s.length-i-1)) % 9876;
@@ -700,6 +702,15 @@
 	g = val % 50 + 200;
 	b = val % 48 + 200;
 	return 'rgb('+r+','+g+','+b+')';
+    };
+
+    var rainbowColor = function(entry){
+	if(entry.indent == 0) return 'rgb(250,250,200)';
+	if(entry.indent == 1) return 'rgb(250,210,250)';
+	if(entry.indent == 2) return 'rgb(200,240,240)';
+	if(entry.indent == 3) return 'rgb(200,200,200)';
+	if(entry.indent == 4) return 'rgb(170,170,170)';
+	return 'rgb(10,10,10)';
     };
 
     var defaultDiv = function(rainbowzoomer){
